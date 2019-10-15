@@ -1,8 +1,8 @@
 
-# 信封.csv 的數值必須全部選為通用 ，就是不能有‘ ，’，這個必須跟育靜特別交代。
-# 這個是用於信封檔案轉貼用
+# excell 資料讀取跟存檔 
 
-cus = []
+# （1） 定義月份跟年份的函數，資料整理使用
+
 
 from datetime import datetime
 X =datetime.today()
@@ -12,32 +12,53 @@ cusm = X.month
 cusd = X.day
 idname = str(cusy)+'-'+str(cusm)+'-'
 
-print(idname)
+#（2）  讀取已經存在的檔案
+
+from openpyxl import load_workbook
 
 
+wb = load_workbook(filename = '10806.xlsx')
 
-with open('信封.csv', 'r') as f:
-	for line in f:
-		for line in f:
-		 B0,B1,B2,B3,B4,B5,B6,B7,B8,B9,B10 = line.strip().split(',')
-		 cus.append([ B0,B1,B2,B3,B4,B5,B6,B7,B8,B9,B10])
+# ws = wb.active  # 正在主動的資料夾
+# ws = 指定名稱資料夾
 
-# print (cus)
+ws = wb["Sheet1"]
 
-for c in cus:
-	print(idname+ c[0], str(cusy), str(cusm),c[0],c[6])
+# （3） 將檔案存入【】中 
+
+company = [] 
+rows = ws.rows
+columns = ws.columns
+
+for row in rows:
+
+	if '帳款含稅款'in row:
+		continue
+
+	line = [col.value for col in row] 
+
+	 # print (line)
+ 
+ # print ('客戶編號:',line[0] ,line [4] ,line [5]) # 打印excell資料的指定欄位
+
+	company.append(line) #將 讀取資料存儲list 
+
+# print (company) #打印加入company 的所有的資料
 
 
+for c in company: #這個欄位是要確認我們資料處理是否正確的
+		print(idname+ c[0], str(cusy), str(cusm),c[0],c[6])
 
 filename = '信封管理'+ idname+str(cusd)+'.csv'
 
+# (4) 將資料存成 CSV 檔案
+
 with open(filename,'w') as f:
-		for c in cus:
+		for c in company:
 			idn = (idname +c[0])
 			iy = str(cusy)
 			im = str(cusm)
-			f.write(idn+','+ iy+','+ im+','+ c[0]+','+ c[6]+'\n' )
+			f.write(idn+','+ iy+','+ im+','+ str(c[0])+','+ str(c[6])+'\n' )
 
 
 print('轉檔OK-可以複製貼上了 !!!')
-
