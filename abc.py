@@ -1,9 +1,9 @@
-# tkinter 的應用標準寫法
-
+# tkinter 的資料輸入然後按鍵後文件輸出。 
 
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
+
 
 window = tk.Tk()
 
